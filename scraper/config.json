@@ -1,0 +1,174 @@
+{
+    "traveloka": {
+        "base_url": "https://www.traveloka.com"
+,
+        "start_urls": [
+          "/en-en/explore/destination/pl-it-4-weeks-in-united-states/219396"
+        ],
+        "selectors": {
+        "title": " h1",
+        "content": ["article p", "text", "strong", "h2"]
+        
+      }
+    },
+    "travelyesplease": {
+        "base_url": "https://www.travelyesplease.com"
+,
+        "start_urls": [
+          "/category/itineraries/",
+          "/united-states-travel-guide-inspiration-information/"
+        ],
+        "selectors": {
+        "title": " h1",
+        "content": ["article p"],
+        "link": "article h2 a"
+      }
+    },
+    "theblondeabroad": {
+        "base_url": "https://www.theblondeabroad.com"
+,
+        "start_urls": [
+            "/ultimate-weekend-alaska-road-trip-itinerary/",
+            "/ultimate-southwest-usa-road-trip-itinerary/",
+            "/tag/arizona/",
+            "/10-places-to-visit-in-arizona-that-arent-the-grand-canyon/",
+            "/best-cities-to-travel-alone-in-the-usa/",
+            "/locals-guide-to-boston/"
+        ],
+        "selectors": {
+        "title": " h1",
+        "content": ["article p"],
+        "link": "a"
+      }
+    },
+    "thetimes": {
+        "base_url": "https://www.thetimes.com"
+,
+        "start_urls": [
+            "/travel/destinations/north-america-travel"
+        ],
+        "selectors": {
+        "title": " h1",
+        "content": ["article p"],
+        "link": "a"
+      }
+    },
+    "hannahwillett": {
+        "base_url": "https://hannahwillett.com",
+        "start_urls": [
+            "/2-weeks-in-the-usa-7-perfect-travel-itineraries/"
+        ],
+        "selectors": {
+        "title": "h1",
+        "content": ["article p"],
+        "link": "a"
+      }
+    },
+    "nomadicmatt": {
+        "base_url": "https://www.nomadicmatt.com",
+        "start_urls": [
+            "/travel-blogs/united-states-road-trip-itinerary/",
+            "/travel-guides/central-america-travel-tips/"
+        ],
+        "selectors": {
+        "title": "h1",
+        "content": ["article p"],
+        "link": "a"
+      }
+    },
+    "tanya_blogger": {
+        "base_url": "https://tanyafoster.com/",
+        "start_urls": [
+            "/category/travel/united-states/"
+        ],
+        "selectors": {
+        "title": "h1",
+        "content": ["article p"],
+        "link": "article h2 a"
+      }
+    },
+    "american_travel_blogger": {
+      "base_url": "https://www.americantravelblogger.com",
+      "start_urls": [
+        "/usa/",
+        "/destinations/north-america/",
+        "/travel-tips/"
+      ],
+      "selectors" : {
+        "link": "article h2 a",
+        "content": ["article p"],
+        "title": "h1"
+      }
+    },
+    "earthtrekkers": {
+      "base_url": "https://www.earthtrekkers.com",
+      "start_urls": ["/americas-itineraries"],
+      "selectors": {
+        "link": "article a",
+        "content": ["article p"],
+        "title": "h1"
+      }
+    },
+    "kimkim_travels": {
+      "base_url": "https://www.kimkim.com",
+      "start_urls": [
+        "/sc/united-states-tours",
+        "/itineraries",
+        "/d/united-states",
+        "/activities"
+      ],
+      "selectors" : {
+        "link": "a",
+        "content": ["article p"],
+        "title": "h1"
+      }
+    },
+    "travelingwithpurpose": {
+      "base_url": "https://travelingwithpurpose.com",
+      "start_urls": [
+        "/our-ultimate-usa-road-trip-itinerary/",
+        "/midwest-states-travel/",
+        "/northeast-states-travel/",
+        "/southeast-states-travel/",
+        "/southwest-states-travel/",
+        "/western-states-travel/"
+      ],
+      "selectors": {
+        "content": ["article p"],
+        "title": "h1"
+      }
+    },
+    "lonely_planet": {
+      "base_url": "https://www.lonelyplanet.com",
+      "start_urls": [
+        "/articles",
+        "/articles/category/adventure-travel",
+        "/articles/category/beaches",
+        "/articles/category/wildlife-and-nature",
+        "/articles/category/road-trips",
+        "/usa/alaska",
+        "/usa/california",
+        "/usa/florida",
+        "/usa/hawaii",
+        "/usa/texas",
+        "/usa/rocky-mountains/colorado",
+        "/usa/alaska/anchorage",
+        "/usa/austin",
+        "/usa/rocky-mountains/denver",
+        "/usa/las-vegas",
+        "/usa/los-angeles",
+        "/usa/miami",
+        "/usa/new-orleans",
+        "/usa/new-york-city",
+        "/usa/florida/orlando",
+        "/usa/san-diego",
+        "/usa/san-francisco",
+        "/usa/washington-dc"
+      ],
+      "selectors": {
+        "title": "h1",
+        "content": ["p", "h2"],
+        "link": "a"
+      }
+    }
+  }
