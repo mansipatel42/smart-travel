@@ -1,6 +1,13 @@
-from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
-import torch
 import logging
+import torch
+from queue import Queue
+from threading import Thread
+
+from transformers import (
+    AutoModelForCausalLM, AutoTokenizer,
+    BitsAndBytesConfig,
+    TextIteratorStreamer
+)
 
 class TravelAgent:
     def __init__(self, config):
@@ -12,6 +19,7 @@ class TravelAgent:
         if not self.set_modelpaths():
             raise ValueError("paths for models is missing from the tuner config")
         
+        self.device = TravelAgent._set_device()
         self.load_tokenizers()
         self.load_model()
         self.load_base_model()
@@ -29,7 +37,8 @@ class TravelAgent:
         self.base_model_path = self.config['base_model_path']
         return True
     
-    def get_device_map(self):
+    @staticmethod
+    def _set_device():
         if torch.cuda.is_available():
             return "cuda"
         elif torch.backends.mps.is_available():
@@ -41,9 +50,8 @@ class TravelAgent:
         self.base_tokenizer = AutoTokenizer.from_pretrained(self.base_model_path)
     
     def load_model(self):
-        device = self.get_device_map()
         print("Loading finetuned model")
-        if device == "mps":
+        if self.device == "mps":
             self.model = AutoModelForCausalLM.from_pretrained(
                 self.model_path,
                 device_map="auto"
@@ -51,18 +59,17 @@ class TravelAgent:
         else:
             self.model = AutoModelForCausalLM.from_pretrained(
                 self.model_path,
-                device_map={"": device},
+                device_map={"": self.device},
                 use_cache=False
             )
         
-        self.model.to(device)
+        self.model.to(self.device)
         # Move the model to inference state. Without this it is still in training mode
         self.model.eval()
     
     def load_base_model(self):
-        device = self.get_device_map()
         print("Loading base model")
-        if device == "mps":
+        if self.device == "mps":
             self.base_model = AutoModelForCausalLM.from_pretrained(
                 self.base_model_path,
                 device_map="auto"
@@ -77,27 +84,42 @@ class TravelAgent:
 
             self.base_model = AutoModelForCausalLM.from_pretrained(
                 self.base_model_path,
-                device_map={"": device},
+                device_map={"": self.device},
                 quantization_config=quant_config,
                 use_cache=False
             )
         
-        self.base_model.to(device)
+        self.base_model.to(self.device)
         # Move the model to inference state. Without this it is still in training mode
         self.base_model.eval()
     
-    def generate(self, prompt):
-        device = self.get_device_map()
-        inputs = self.tokenizer(prompt, return_tensors="pt").to(device)
-        outputs = self.model.generate(**inputs, max_length=750)
-        response = self.tokenizer.decode(outputs[0], skip_special_tokens=True)
+    def _generate(self, model, tokenizer, prompt):
+        inputs = tokenizer(prompt, return_tensors="pt").to(self.device)
+        outputs = model.generate(**inputs, max_length=50)
+        response = tokenizer.decode(outputs[0], skip_special_tokens=True)
 
         return response
     
-    def generate_base(self, prompt):
-        device = self.get_device_map()
-        inputs = self.base_tokenizer(prompt, return_tensors="pt").to(device)
-        outputs = self.base_model.generate(**inputs, max_length=750)
-        response = self.base_tokenizer.decode(outputs[0], skip_special_tokens=True)
+    def _generate_stream(self, model, tokenizer, streamer, prompt):
+        inputs = tokenizer(prompt, return_tensors="pt").to(self.device)
 
-        return response
+        generation_kwargs = dict(inputs, streamer=streamer, max_new_tokens=500)
+
+        generator = Thread(target=model.generate, kwargs=generation_kwargs)
+        generator.start()
+
+
+    def generate(self, prompt, stream=False):
+        if not stream:
+            return self._generate(self.model, self.tokenizer, prompt)
+        streamer = TextIteratorStreamer(self.tokenizer)
+        self._generate_stream(self.model, self.tokenizer, streamer, prompt)
+        return streamer
+
+
+    def generate_base(self, prompt, streamer=None):
+        if not streamer:
+            return self._generate(self.base_model, self.base_tokenizer, prompt)
+        streamer = TextIteratorStreamer(self.tokenizer)
+        self._generate_stream(self.model, self.tokenizer, streamer, prompt)
+        return streamer

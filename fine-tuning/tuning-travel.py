@@ -233,8 +233,8 @@ class ModelTuner:
             args=TrainingArguments(
                 output_dir=self.finetuned_model,
                 warmup_steps=50,
-                per_device_train_batch_size=2,
-                gradient_accumulation_steps=4,
+                per_device_train_batch_size=1,
+                gradient_accumulation_steps=8,
                 optim="adamw_torch",
                 learning_rate=1e-5,        # Want a small lr for finetuning
                 fp16=True,

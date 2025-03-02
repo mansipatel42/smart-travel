@@ -151,7 +151,6 @@ class TravelScraper:
         """Main loop to scrape the website."""
         # to_visit = set(self.start_urls)
         logging.info(f"Running scraper for {self.base_url}")
-
         to_visit = set(self.get_internal_links(self.start_urls))
 
         count = 0
