@@ -18,7 +18,7 @@ export default function Chat() {
     setInput("");
 
     try {
-      const response = await fetch("http://192.168.1.64:8000/chat/v1", {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/chat/v1`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ prompt: input, stream: true }) // Enable streaming
@@ -48,13 +48,32 @@ export default function Chat() {
     }
   };
 
+  const userStyle = {
+    backgroundColor: '#e0f7fa',
+    alignSelf: 'flex-end',
+    padding: '10px',
+    borderRadius: '10px',
+    margin: '5px 0'
+  };
+
+  const botStyle = {
+    backgroundColor: '#f1f8e9',
+    alignSelf: 'flex-start',
+    padding: '10px',
+    borderRadius: '10px',
+    margin: '5px 0'
+  };
+
   return (
     <Container maxWidth="sm">
       <Paper elevation={3} sx={{ p: 2, height: "80vh", display: "flex", flexDirection: "column" }}>
-        <Typography variant="h5" gutterBottom>Chat</Typography>
+        <Typography variant="h5" gutterBottom>Smart Travel Companion</Typography>
         <div style={{ flexGrow: 1, overflowY: "auto", padding: "10px" }}>
           {messages.map((msg, index) => (
-            <Typography key={index} align={msg.sender === "User" ? "right" : "left"}>
+            <Typography
+              key={index} align={msg.sender === "User" ? "right" : "left"}
+              style={msg.sender === "User" ? userStyle : botStyle}
+            >
               <b>{msg.sender}:</b> {msg.text}
             </Typography>
           ))}
