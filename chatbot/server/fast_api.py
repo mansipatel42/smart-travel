@@ -1,16 +1,16 @@
-import logging
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 from travel_agent import TravelAgent
-from queue import Queue
-from time import sleep
-from threading import Thread
+
+from pathlib import Path
+
+HOME = Path.home()
 
 config = {
-    "model_path": "C:/Users/vedmp/smart-travel/fine-tuning/models/mistral-finetuned-v0.2",
-    "base_model_path": "C:/Users/vedmp/smart-travel/fine-tuning/models/mistral",
+    "model_path": str(HOME / "Github/smart-travel/chatbot/models/mistral-finetuned-v0.2"),
+    "base_model_path": str(HOME / "Github/smart-travel/chatbot/models/mistral"),
 }
 
 print("Loading the models")
@@ -49,8 +49,3 @@ async def submit_query(request: QueryRequest):
 
     return {"query": request.prompt, "response": response}
 
-"""
-@app.get('/chat/stream')
-async def stream():
-    return StreamingResponse(data_reader(), media_type='text/event-stream')
-"""
